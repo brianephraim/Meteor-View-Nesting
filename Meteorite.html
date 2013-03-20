@@ -7,7 +7,7 @@
 
 <template name="pack">
   {{#with listDataContext}}
-      <h1>{{title}}</h1>
+      <h2>{{title}}</h2>
       {{#each items}}
         {{> packItem}}
       {{/each}}
@@ -16,39 +16,39 @@
 
 <template name="packItem">
 <div class="member id-{{_id}}">
-  <p>{{name}}, {{color}}</p>
+  <p>{{name}}, {{year}}</p>
   {{#constant}}
-  <div class="itemInsertionPoint">
+  <div class="listItemSubViewInsertionPoint">
   </div>
   {{/constant}} 
 </div>
 </template>
 
-<template name="nickNameList">
-  <li><strong>NICKNAMES</strong></li>
+<template name="characterList">
+  <li><strong>characters</strong></li>
   {{#each items}}
-    {{> nickNameItem}}
+    {{> characterListItem}}
   {{/each}}
 </template>
 
-<template name="nickNameItem">
+<template name="characterListItem">
   <li>
     {{this}}
   </li>
 </template>
 
-<template name="linksList">
+<template name="linkList">
   {{#with listDataContext}}
   <div>
     <h2>{{title}}</h2>
     {{#each items}}
-      {{> linksListItem}}
+      {{> linkListItem}}
     {{/each}}
   </div>
   {{/with}}
 </template>
 
-<template name="linksListItem">
+<template name="linkListItem">
   <div>
     --- 
     <a href="{{url}}" target="new">{{name}}</a>

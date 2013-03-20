@@ -1,4 +1,8 @@
-.member{padding:10px;margin-bottom:10px;background:#ddd;}/* CSS declarations go here */
-.nickNames{background:#444; color:white;padding:10px;padding-left:20px;}
+h2{cursor:pointer; border-radius:20px; background:#222; color:yellow; padding:10px;}
+h2:hover{background:#555; color:yellow;}
+.member{cursor:pointer;padding:10px;margin-bottom:10px;background:#ddd;border:5px solid #bbb;}/* CSS declarations go here */
+.member:hover{background:#eee;border:5px solid #ccc;}
+.characterListClass{cursor:auto;background:#444; color:white;padding:10px;padding-left:20px;}
 .parentClass{border:2px solid black;padding:10px;}
-.subviewInMainParent{background:#777;}
+.linkListClass{background:#777;padding:10px;}
+.linkListClass a {color:yellow;}

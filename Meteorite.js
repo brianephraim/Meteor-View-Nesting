@@ -1,10 +1,10 @@
 
-var catsColl = new Meteor.Collection("Cats");
+var tvShowColl = new Meteor.Collection("tvShows");
 
 if(Meteor.isServer) {
       Meteor.startup(function () {
-       Meteor.publish("Cats", function() {
-         return catsColl.find(
+       Meteor.publish("tvShows", function() {
+         return tvShowColl.find(
             {},
             //{owner:this.userId},
             {fields:{Category:1}});
@@ -13,7 +13,7 @@ if(Meteor.isServer) {
 }
 
 
-//catsColl.insert({name:"Boomer",owner:"Brian"})
+//tvShowColl.insert({name:"Boomer",owner:"Brian"})
 
 if (Meteor.isClient) {
    Meteor.ite = function(options){
@@ -52,7 +52,7 @@ if (Meteor.isClient) {
       
    };
    Meteor.ite.prototype.makeReactive = function(fun){
-      /*
+      /**/
       var frag = Spark.render(
         function(){
           return Spark.isolate(
@@ -60,36 +60,28 @@ if (Meteor.isClient) {
           );
         }
       );
-      */
-      
+      /*
       var frag = Spark.render(
-         /*
          function () {
-
             return Spark.createLandmark({
                preserve: ['.x'],
-
                created: function () {
                   console.log("created", this, arguments);
                },
-
                rendered: function () {
                   console.log("rendered", this, arguments);
                },
-
                destroyed: function () {
                   console.log("destroyed", this, arguments);
                }
             },
-         */
             function (landmark) {
                return Spark.isolate( 
                   fun
                 );
-            }/*)
-         }*/
-      );
-      console.log(frag)
+            });
+         }
+      );*/
       return frag;
    }
    Meteor.ite.prototype.kill = function(){
@@ -98,98 +90,66 @@ if (Meteor.isClient) {
    }
    Meteor.ite.prototype.insertReactiveSubviewIntoListItemViaSession = function(self,$el,viewId,viewIdPrefix,subscriptionName,selfSubviewAssignment,viewGenerator,targetParent$el,targetParentMethod,findString){
       var self2 = self;
-      function doit(){
-         function doIt2(){
-            console.log('eee')
-            targetParent$el[targetParentMethod](
-               self.makeReactive( 
-                  function(){
-                     console.log('ddd')
-                     if(typeof Session.get(viewIdPrefix+viewId) !== 'undefined'){ 
-                        //console.log(selfSubviewAssignment)
-                        if(typeof selfSubviewAssignment !== 'undefined'){selfSubviewAssignment.kill()}
-                        selfSubviewAssignment = viewGenerator(viewId); 
-                        if(findString !== ''){
-                           $el.find('.id-'+Session.get(viewIdPrefix+viewId)).find(findString).append(selfSubviewAssignment.$el)
-                        } else {
-                           $el.find('.id-'+Session.get(viewIdPrefix+viewId)).append(selfSubviewAssignment.$el) 
-                        } 
-                     }
-                    /* */
+      Meteor.subscribe(subscriptionName, function(){
+         targetParent$el[targetParentMethod](
+            self.makeReactive( 
+               function(){
+                  if(typeof Session.get(viewIdPrefix+viewId) !== 'undefined'){ 
+                     if(typeof selfSubviewAssignment !== 'undefined'){selfSubviewAssignment.kill()}
+                     selfSubviewAssignment = viewGenerator(viewId); 
+                     if(findString !== ''){
+                        $el.find('.id-'+Session.get(viewIdPrefix+viewId)).find(findString).append(selfSubviewAssignment.$el)
+                     } else {
+                        $el.find('.id-'+Session.get(viewIdPrefix+viewId)).append(selfSubviewAssignment.$el) 
+                     } 
                   }
-               )
+               }
             )
-         }
-         doIt2()
-         /*
-         var collection = catsColl.find({}); 
-         console.log(collection)
-         collection.observe({
-           changed: function (id, user) {
-             $el.append('--booger--')
-             console.log('asdf')
-             doIt2()
-           }
-         });*/
-      } 
-      Meteor.subscribe(subscriptionName, doit)
-      /*
-      self.childTemplate.rendered = function(){ 
-         console.log(this) 
-         self2.$el.append('--booger--')
-
-      }
-      */
-      
-      
-      /**/
-      
+         )         
+      })
    }
 
 
    function renderTemplateToBody() {
-      var helpfulLinksViewGenerator = function(){ return new Meteor.ite({
-         parentElementClass:'subviewInMainParent',
-         handlebarsName:'linksList',
+      var linkListViewGenerator = function(){ return new Meteor.ite({
+         parentElementClass:'linkListClass',
+         handlebarsName:'linkList',
          obj:function(self){return {
             listDataContext: {
-               title: "Useful links",
-               hint: "click these links"
+               title: "Helpful links",
+               hint: "Find helpful links below"
             },
             items: function () {
                return [
-                  {url:'http://en.wikipedia.org/wiki/Cats',name:'Wikipedia/cats'},
-                  {url:'http://icanhas.cheezburger.com/lolcats',name:'lolcats'}
+                  {url:'http://www.imdb.com',name:'IMDB'},
+                  {url:'http://www.tvguide.com',name:'Tv Guide'}
                ] ;
             }
          }},
          eventsMap:function(self){return {
-            "click h1": function (e, tmpl) {
-               console.log(this.hint)
+            "click h2": function (e, tmpl) {
+               alert(this.hint)
             }
          }}
       })};
 
 
-      var nickNameListViewGenerator = function(viewId){ return new Meteor.ite({ 
-         parentElementClass:'nickNames',
-         handlebarsName:'nickNameList',
+      var characterListViewGenerator = function(viewId){ return new Meteor.ite({  
+         parentElementClass:'characterListClass',
+         handlebarsName:'characterList',
          parentElementType:'ul',
          obj:function(self){return {
             items: function () {
-               var collection = catsColl.findOne({_id:Session.get('selectedCat'+viewId)});
-               //console.log(collection)
+               var collection = tvShowColl.findOne({_id:Session.get('selectedTvShow'+viewId)});
                if(typeof collection !== 'undefined'){
-                  self.itemsSourceData = collection.nickNames
+                  self.itemsSourceData = collection.characters
                } else {
                   self.itemsSourceData = []
                }
-
-               //self.itemsSourceData = catsColl.findOne({_id:'bHZfQpHQeF8GjkmBm'}).nickNames
                return self.itemsSourceData
             }
          }},
-         eventsMap:function(self){return {//eventsMap
+         eventsMap:function(self){return {
             "click": function (e, tmpl) {
                e.stopPropagation()
             }
@@ -198,109 +158,69 @@ if (Meteor.isClient) {
 
 
 
-      var catListViewGenerator = function(viewId){ return new Meteor.ite({
+      var tvShowListViewGenerator = function(viewId){ return new Meteor.ite({
          parentElementClass:'parentClass',
-         handlebarsName:'pack',//handlebarsName
-         obj:function(self){return {//obj
+         handlebarsName:'pack',
+         obj:function(self){return {
             listDataContext: {
-               title: "Cat List",
-               hint: "cats"
+               title: "TV Show List",
+               hint: "Click the TV shows below to see their characters"
             }, 
             items: function () {
-               self.itemsSourceData = catsColl.find({},{sort: {name: 1}});
+               self.itemsSourceData = tvShowColl.find({},{sort: {name: 1}});
                return self.itemsSourceData;
             }
          }},
-         eventsMap:function(self){return {//eventsMap
+         eventsMap:function(self){return {
             "click .member": function (e, tmpl) {
-               console.log('click') 
-               Session.set('selectedCat'+viewId,this._id);
+               Session.set('selectedTvShow'+viewId,this._id);
             },
-            "click h1": function (e, tmpl) {
-               console.log(this.hint)
+            "click h2": function (e, tmpl) {
+               alert(this.hint)
             }
          }}, 
-         manipulation:function($el,self){//manipulation
-           // Meteor.subscribe('Cats', function(){ //subviews were not rendering on liveHtmlPush so I needed to subscribe.  Make sure server has a publish method. 
-            console.log('tttt')
-            self.insertReactiveSubviewIntoListItemViaSession(self,$el,viewId,'selectedCat','Cats',self.nickNamesView,nickNameListViewGenerator,$el,'append','.itemInsertionPoint')
-            
-            
-            var frag = self.makeReactive( 
-               function(){ 
-                  return 'yyyyyyy'+Session.get('selectedCat'+viewId);
+         manipulation:function($el,self){
+            //Insert a reactive string showing current selection
+            var curentSelectionFrag = self.makeReactive( 
+               function(){
+                  var doc = tvShowColl.findOne({_id:Session.get('selectedTvShow'+viewId)});
+                  var string = typeof doc !== 'undefined' ? doc.name : 'none selected';
+                  return 'Current selection: '+string;
                } 
             );
-            $el.append(frag)
-           /* */
-            $el.append(helpfulLinksViewGenerator().$el); 
+            var currentSelectionWrapper = $('<p class="currentSelection"></p>');
+            currentSelectionWrapper.append(curentSelectionFrag)
+            $el.find('h1').after(currentSelectionWrapper)
 
+            //Insert a subview into this tvShowListView container
+            $el.append(linkListViewGenerator().$el); 
 
-            Session.set("title", "It's a bird.. it's a plane.. it's a Landmark!");
-
-            $el.append(Spark.render(
-
-               function () {
-
-                  return Spark.createLandmark({
-                     preserve: ['h1'],
-
-                     created: function () {
-                        console.log("created", this, arguments);
-                     },
-
-                     rendered: function () {
-                        console.log("rendered", this, arguments);
-                     },
-
-                     destroyed: function () {
-                        console.log("destroyed", this, arguments);
-                     }
-                  },
-
-                  function (landmark) {
-                     return Spark.isolate(
-
-                     function () {
-                        // make reactive
-                        var title = Session.get("title");
-
-                        return [
-                           "<h1>",
-                        title,
-                           "</h1>"].join("");
-                     });
-                  });
-               }
-
-            ));
-
-
-
+            //Insert subviews into individual list items within this tvShowListView container, based on current selection
+            self.insertReactiveSubviewIntoListItemViaSession(self,$el,viewId,'selectedTvShow','tvShows',self.charactersView,characterListViewGenerator,$el,'append','.listItemSubViewInsertionPoint')
          }
       })};
 
-      var $catListView1 = catListViewGenerator('catListView1').$el; 
-      //var $catListView2 = catListViewGenerator('catListView2').$el;
+      var $tvShowListView1 = tvShowListViewGenerator('tvShowListView1').$el;  
+      var $tvShowListView2 = tvShowListViewGenerator('tvShowListView2').$el;
       
       var testButton = $('<button>HIDE/SHOW THE LIST BELOW</button>');
 
       var d = 0;
       testButton.on('click',function(){
          if(d === 0){
-            $catListView2.remove();
+            $tvShowListView2.remove();
             d = 1;
          } else {
-            $catListView2 = catListViewGenerator('catListView2').$el;
-            $('body').append($catListView2);
+            $tvShowListView2 = tvShowListViewGenerator('tvShowListView2').$el;
+            $('body').append($tvShowListView2);
             d = 0;
          }
 
       })
 
-      $('body').append($catListView1);
+      $('body').append($tvShowListView1);
       $('body').append(testButton)
-      //$('body').append($catListView2); 
+      $('body').append($tvShowListView2); 
       
      
 
@@ -311,27 +231,27 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
    Meteor.startup(function () {
-      if (catsColl.find().count() === 0) {
+      if (tvShowColl.find().count() === 0) {
          var data = [
             {
-               name:'Boomer',
-               color:'White',
-               nickNames: ['Pontooner','Cow','Van Boomingfrau']
+               name:'Game of Thrones',
+               year:'2011',
+               characters: ['Jon Snow','Tyrion Lannister','Daenerys Targaryen']
             },
             {
-               name:'Behemoth',
-               color:'Brown',
-               nickNames: ['Mr.Z','Professor','That Other Cat']
+               name:'The Walking Dead',
+               year:'2010',
+               characters: ['Rick Grimes','Daryl Dixon','Glenn Rhee']
             }
          ]
          
          for (var i = 0; i < data.length; i++){
-            catsColl.insert(data[i]);
+            tvShowColl.insert(data[i]);
          }
       }
    });
 }
 
-//catsColl.update({_id:'bHZfQpHQeF8GjkmBm'}, {name: 'Behemoth',color: 'blue',nickNames:['asdf','zxcv']});
+//tvShowColl.update({_id:'bHZfQpHQeF8GjkmBm'}, {name: 'Behemoth',color: 'blue',characters:['asdf','zxcv']});
 
-//catsColl.update({'_id':'bHZfQpHQeF8GjkmBm'}, {$set:{color:'red'}});
+//tvShowColl.update({'_id':'bHZfQpHQeF8GjkmBm'}, {$set:{color:'red'}});
