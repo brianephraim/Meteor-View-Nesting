@@ -10,5 +10,6 @@ In Meteor, it was easy enough to turn subviews on and off with a session variabl
 
 I dug deeper into the Meteor and Spark documentation, and found cmather's EventedMind Meteor Videos which were super helpful.
 
-Here is the result:  https://github.com/defualt/Meteorite
-Please check it out, fork it, give me any pointers.  This accomplishes the effect I desired of nesting views within other views.  Subviews survive hot code pushes and parentview destruction/resurrection.  
+This accomplishes the effect I desired of nesting views within other views.  Subviews survive hot code pushes and parentview destruction/resurrection.  
+
+There are some critical issues.  Please fork.
