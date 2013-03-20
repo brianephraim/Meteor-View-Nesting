@@ -1,0 +1,59 @@
+<head>
+  <title>Spark Data Annotation</title>
+</head>
+
+<body>
+</body>
+
+<template name="pack">
+  {{#with listDataContext}}
+      <h1>{{title}}</h1>
+      {{#each items}}
+        {{> packItem}}
+      {{/each}}
+  {{/with}}
+</template>
+
+<template name="packItem">
+<div class="member id-{{_id}}">
+  <p>{{name}}, {{color}}</p>
+  {{#constant}}
+  <div class="itemInsertionPoint">
+  </div>
+  {{/constant}} 
+</div>
+</template>
+
+<template name="nickNameList">
+  <li><strong>NICKNAMES</strong></li>
+  {{#each items}}
+    {{> nickNameItem}}
+  {{/each}}
+</template>
+
+<template name="nickNameItem">
+  <li>
+    {{this}}
+  </li>
+</template>
+
+<template name="linksList">
+  {{#with listDataContext}}
+  <div>
+    <h2>{{title}}</h2>
+    {{#each items}}
+      {{> linksListItem}}
+    {{/each}}
+  </div>
+  {{/with}}
+</template>
+
+<template name="linksListItem">
+  <div>
+    --- 
+    <a href="{{url}}" target="new">{{name}}</a>
+  </div>
+</template>
+
+
+

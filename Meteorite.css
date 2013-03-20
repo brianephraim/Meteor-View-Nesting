@@ -1,0 +1,4 @@
+.member{padding:10px;margin-bottom:10px;background:#ddd;}/* CSS declarations go here */
+.nickNames{background:#444; color:white;padding:10px;padding-left:20px;}
+.parentClass{border:2px solid black;padding:10px;}
+.subviewInMainParent{background:#777;}
