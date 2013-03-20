@@ -12,7 +12,7 @@ if(Meteor.isServer) {
 }
 
 if (Meteor.isClient) {
-   Meteor.ite = function(options){
+   Meteor.nest = function(options){
       var self = this;
       var defaults = {
          parentElementType:'div',
@@ -41,7 +41,7 @@ if (Meteor.isClient) {
       this.$el = $el;
       
    };
-   Meteor.ite.prototype.makeReactive = function(fun){
+   Meteor.nest.prototype.makeReactive = function(fun){
       /**/
       var frag = Spark.render(
         function(){
@@ -74,11 +74,11 @@ if (Meteor.isClient) {
       );*/
       return frag;
    }
-   Meteor.ite.prototype.kill = function(){ 
+   Meteor.nest.prototype.kill = function(){ 
       this.$el.remove();
       delete this;
    }
-   Meteor.ite.prototype.insertReactiveSubviewIntoListItemViaSession = function(settings){
+   Meteor.nest.prototype.insertReactiveSubviewIntoListItemViaSession = function(settings){
       var self2 = this;
       Meteor.subscribe(settings.subscriptionName, function(){
          settings.listParent$el[settings.targetParentMethod](
@@ -100,7 +100,7 @@ if (Meteor.isClient) {
    }
 
    function renderTemplateToBody() {
-      var linkListViewGenerator = function(){ return new Meteor.ite({
+      var linkListViewGenerator = function(){ return new Meteor.nest({
          parentElementClass:'linkListClass',
          handlebarsName:'linkList',
          obj:function(self){return {
@@ -123,7 +123,7 @@ if (Meteor.isClient) {
       })};
 
 
-      var characterListViewGenerator = function(viewId){ return new Meteor.ite({  
+      var characterListViewGenerator = function(viewId){ return new Meteor.nest({  
          parentElementClass:'characterListClass',
          handlebarsName:'characterList',
          parentElementType:'ul',
@@ -154,7 +154,7 @@ if (Meteor.isClient) {
 
 
 
-      var tvShowListViewGenerator = function(viewId){ return new Meteor.ite({
+      var tvShowListViewGenerator = function(viewId){ return new Meteor.nest({
          parentElementClass:'parentClass',
          handlebarsName:'tvShowList',
          obj:function(self){return {
