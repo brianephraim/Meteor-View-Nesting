@@ -156,7 +156,7 @@ if (Meteor.isClient) {
 
       var tvShowListViewGenerator = function(viewId){ return new Meteor.ite({
          parentElementClass:'parentClass',
-         handlebarsName:'pack',
+         handlebarsName:'tvShowList',
          obj:function(self){return {
             listDataContext: {
                title: "TV Show List",

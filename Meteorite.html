@@ -5,16 +5,16 @@
 <body>
 </body>
 
-<template name="pack">
+<template name="tvShowList">
   {{#with listDataContext}}
       <h2>{{title}}</h2>
       {{#each items}}
-        {{> packItem}}
+        {{> tvShowListItem}}
       {{/each}}
   {{/with}}
 </template>
 
-<template name="packItem">
+<template name="tvShowListItem">
 <div class="member id-{{_id}}">
   <p>{{name}}, {{year}}</p>
   <div>
