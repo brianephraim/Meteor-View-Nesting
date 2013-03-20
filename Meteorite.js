@@ -6,14 +6,10 @@ if(Meteor.isServer) {
        Meteor.publish("tvShows", function() {
          return tvShowColl.find(
             {},
-            //{owner:this.userId},
             {fields:{Category:1}});
        });
      });
 }
-
-
-//tvShowColl.insert({name:"Boomer",owner:"Brian"})
 
 if (Meteor.isClient) {
    Meteor.ite = function(options){
@@ -29,12 +25,6 @@ if (Meteor.isClient) {
       var settings = $.extend({}, defaults, options); 
       self.template = Template[settings.handlebarsName];     
       self.childTemplate = Template[settings.handlebarsName+'Item'];   
-
-
-
-      
-
-
 
       var returnHtml = (function(){
           self.template.helpers(settings.obj(self));
@@ -84,23 +74,23 @@ if (Meteor.isClient) {
       );*/
       return frag;
    }
-   Meteor.ite.prototype.kill = function(){
+   Meteor.ite.prototype.kill = function(){ 
       this.$el.remove();
       delete this;
    }
-   Meteor.ite.prototype.insertReactiveSubviewIntoListItemViaSession = function(self,$el,viewId,viewIdPrefix,subscriptionName,selfSubviewAssignment,viewGenerator,targetParent$el,targetParentMethod,findString){
-      var self2 = self;
-      Meteor.subscribe(subscriptionName, function(){
-         targetParent$el[targetParentMethod](
-            self.makeReactive( 
+   Meteor.ite.prototype.insertReactiveSubviewIntoListItemViaSession = function(settings){
+      var self2 = this;
+      Meteor.subscribe(settings.subscriptionName, function(){
+         settings.listParent$el[settings.targetParentMethod](
+            self2.makeReactive( 
                function(){
-                  if(typeof Session.get(viewIdPrefix+viewId) !== 'undefined'){ 
-                     if(typeof selfSubviewAssignment !== 'undefined'){selfSubviewAssignment.kill()}
-                     selfSubviewAssignment = viewGenerator(viewId); 
-                     if(findString !== ''){
-                        $el.find('.id-'+Session.get(viewIdPrefix+viewId)).find(findString).append(selfSubviewAssignment.$el)
+                  if(typeof Session.get(settings.viewIdPrefix+settings.viewId) !== 'undefined'){ 
+                     if(typeof settings.selfSubviewAssignment !== 'undefined'){settings.selfSubviewAssignment.kill()}
+                     settings.selfSubviewAssignment = settings.viewGenerator(settings.viewId); 
+                     if(settings.findString !== ''){
+                        settings.listItem$el.find('.id-'+Session.get(settings.viewIdPrefix+settings.viewId)).find(settings.findString).append(settings.selfSubviewAssignment.$el)
                      } else {
-                        $el.find('.id-'+Session.get(viewIdPrefix+viewId)).append(selfSubviewAssignment.$el) 
+                        settings.listItem$el.find('.id-'+Session.get(settings.viewIdPrefix+settings.viewId)).append(settings.selfSubviewAssignment.$el) 
                      } 
                   }
                }
@@ -108,7 +98,6 @@ if (Meteor.isClient) {
          )         
       })
    }
-
 
    function renderTemplateToBody() {
       var linkListViewGenerator = function(){ return new Meteor.ite({
@@ -127,7 +116,7 @@ if (Meteor.isClient) {
             }
          }},
          eventsMap:function(self){return {
-            "click h2": function (e, tmpl) {
+            "click h3": function (e, tmpl) {
                alert(this.hint)
             }
          }}
@@ -190,13 +179,25 @@ if (Meteor.isClient) {
             );
             var currentSelectionWrapper = $('<p class="currentSelection"></p>');
             currentSelectionWrapper.append(curentSelectionFrag)
-            $el.find('h1').after(currentSelectionWrapper)
+            $el.find('h2').after(currentSelectionWrapper)
 
             //Insert a subview into this tvShowListView container
             $el.append(linkListViewGenerator().$el); 
 
             //Insert subviews into individual list items within this tvShowListView container, based on current selection
-            self.insertReactiveSubviewIntoListItemViaSession(self,$el,viewId,'selectedTvShow','tvShows',self.charactersView,characterListViewGenerator,$el,'append','.listItemSubViewInsertionPoint')
+            self.insertReactiveSubviewIntoListItemViaSession(
+               {
+                  listItem$el:$el,
+                  viewId:viewId,
+                  viewIdPrefix:'selectedTvShow',
+                  subscriptionName:'tvShows',
+                  selfSubviewAssignment:self.charactersView,
+                  viewGenerator:characterListViewGenerator,
+                  listParent$el:$el,
+                  targetParentMethod:'append',
+                  findString:'.listItemSubViewInsertionPoint'
+               }
+            )
          }
       })};
 
@@ -221,8 +222,6 @@ if (Meteor.isClient) {
       $('body').append($tvShowListView1);
       $('body').append(testButton)
       $('body').append($tvShowListView2); 
-      
-     
 
    }
 
@@ -251,7 +250,4 @@ if (Meteor.isServer) {
       }
    });
 }
-
-//tvShowColl.update({_id:'bHZfQpHQeF8GjkmBm'}, {name: 'Behemoth',color: 'blue',characters:['asdf','zxcv']});
-
-//tvShowColl.update({'_id':'bHZfQpHQeF8GjkmBm'}, {$set:{color:'red'}});
+//tvShowColl.update({'_id':'Gm4mkTbFp2cymaiYk'}, {$set:{characters:['ddd','eeee','gggddas']}});

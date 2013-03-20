@@ -1,5 +1,5 @@
-h2{cursor:pointer; border-radius:20px; background:#222; color:yellow; padding:10px;}
-h2:hover{background:#555; color:yellow;}
+h2,h3{cursor:pointer; border-radius:20px; background:#222; color:yellow; padding:10px;}
+h2:hover,h3:hover{background:#555; color:yellow;}
 .member{cursor:pointer;padding:10px;margin-bottom:10px;background:#ddd;border:5px solid #bbb;}/* CSS declarations go here */
 .member:hover{background:#eee;border:5px solid #ccc;}
 .characterListClass{cursor:auto;background:#444; color:white;padding:10px;padding-left:20px;}
