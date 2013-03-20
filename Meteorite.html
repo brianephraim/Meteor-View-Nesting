@@ -17,6 +17,10 @@
 <template name="packItem">
 <div class="member id-{{_id}}">
   <p>{{name}}, {{year}}</p>
+  <div>
+    <input class="editName" placeholder="edit name" />
+    <button class="editNameButton">enter</button>
+  </div>
   {{#constant}}
   <div class="listItemSubViewInsertionPoint">
   </div>
@@ -29,6 +33,10 @@
   {{#each items}}
     {{> characterListItem}}
   {{/each}}
+  <li>
+    <input class="addCharacter" placeholder="add character" />
+    <button class="addCharacterButton">enter</button>
+  </li>
 </template>
 
 <template name="characterListItem">

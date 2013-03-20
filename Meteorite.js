@@ -141,6 +141,13 @@ if (Meteor.isClient) {
          eventsMap:function(self){return {
             "click": function (e, tmpl) {
                e.stopPropagation()
+            },
+            "click .addCharacterButton": function (e, tmpl) {
+               var newCharacter = $(e.target).closest('li').find('.addCharacter').val();
+               var currentTvShowId = Session.get('selectedTvShow'+viewId);
+               var currentCharactersArray = tvShowColl.findOne({_id:currentTvShowId}).characters;
+               currentCharactersArray.push(newCharacter);
+               tvShowColl.update({'_id':currentTvShowId}, {$set:{characters:currentCharactersArray}});
             }
          }}
       })};
@@ -166,6 +173,11 @@ if (Meteor.isClient) {
             },
             "click h2": function (e, tmpl) {
                alert(this.hint)
+            },
+            "click .editNameButton": function (e, tmpl) {
+               console.log(this._id)
+               var newName = ($(e.target).closest('.member').find('.editName').val())
+               tvShowColl.update({'_id':this._id}, {$set:{name:newName}});
             }
          }}, 
          manipulation:function($el,self){
