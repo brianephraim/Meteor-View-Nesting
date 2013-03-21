@@ -1,4 +1,4 @@
-Meteorite
+Meteornest
 =========
 
 Templating framework within Meteor for configuring, instantiating, and nesting views.
