@@ -12,4 +12,4 @@ I dug deeper into the Meteor and Spark documentation, and found cmather's Evente
 
 This accomplishes the effect I desired of nesting views within other views.  Subviews survive hot code pushes and parentview destruction/resurrection.  
 
-There are some critical issues.  Please fork.
+There are some bad errors in certain browsers.
